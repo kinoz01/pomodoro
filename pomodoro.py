@@ -102,7 +102,20 @@ def draw_timer_overlay(
     remaining: float,
 ) -> None:
     width, height = dims
-    draw_text(surface, fonts["timer"], format_timer(remaining), (255, 255, 255), (width // 2, height // 2))
+    timer_text = format_timer(remaining)
+    font = fonts["timer"]
+
+    text_surface = font.render(timer_text, True, (255, 255, 255))
+    shadow_surface = font.render(timer_text, True, (0, 0, 0))
+
+    mirrored_text = pygame.transform.flip(text_surface, True, False)
+    mirrored_shadow = pygame.transform.flip(shadow_surface, True, False)
+
+    text_rect = mirrored_text.get_rect(center=(width // 2, height // 2))
+    shadow_rect = mirrored_shadow.get_rect(center=(width // 2 + 3, height // 2 + 3))
+
+    surface.blit(mirrored_shadow, shadow_rect)
+    surface.blit(mirrored_text, text_rect)
 
 
 def ensure_state(
